@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -9,11 +10,11 @@ import (
 
 	"github.com/go-chi/chi"
 	"github.com/joho/godotenv"
+	"github.com/pyKis/go_final_project/database"
 )
 
 const(
 	webDir = "./web"
-	defaultPort = ""
 )
 
 func init() {
@@ -30,6 +31,9 @@ func getPort() string {
 	return ":" + port
 }
 func main() {
+	fmt.Println("DB connect")
+	database.ConnectDB()
+	fmt.Println("DB connected")
 	myHandler := chi.NewRouter()
 	myHandler.Mount("/", http.FileServer(http.Dir(webDir)))
 
