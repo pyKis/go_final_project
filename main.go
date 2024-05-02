@@ -1,13 +1,19 @@
 package main
 
 import (
-	"fmt"
+	"errors"
 	"log"
+	"net/http"
 	"os"
-	"strconv"
-	"strings"
+	"time"
 
+	"github.com/go-chi/chi"
 	"github.com/joho/godotenv"
+)
+
+const(
+	webDir = "./web"
+	defaultPort = ""
 )
 
 func init() {
@@ -16,17 +22,23 @@ func init() {
     }
 }
 
-func getPort(path string) string {
-	port := 0
-	envPort := os.Getenv("TODO_PORT")
-	if len(envPort) > 0 {
-		if eport, err := strconv.ParseInt(envPort, 10, 32); err == nil {
-			port = int(eport)
-		}
+func getPort() string {
+	port := os.Getenv("TODO_PORT")	
+	if len(port) < 0 {
+		errors.New("TODO_PORT not set")
 	}
-	path = strings.ReplaceAll(strings.TrimPrefix(path, `../web/`), `\`, `/`)
-	return fmt.Sprintf("http://localhost:%d/%s", port, path)
+	return ":" + port
 }
 func main() {
-	fmt.Println(getPort("../web/index.html"))
+	myHandler := chi.NewRouter()
+	myHandler.Mount("/", http.FileServer(http.Dir(webDir)))
+
+	s:=&http.Server{
+		Addr:	getPort(),
+		Handler: myHandler,
+		ReadTimeout:  5 * time.Second,
+		WriteTimeout: 10 * time.Second,
+		MaxHeaderBytes: 1 << 20,
+	}
+	log.Fatal(s.ListenAndServe())
 }
