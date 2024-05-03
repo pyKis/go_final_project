@@ -10,7 +10,7 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/joho/godotenv"
 	"github.com/pyKis/go_final_project/database"
-	"github.com/pyKis/go_final_project/hendlers"
+	"github.com/pyKis/go_final_project/handlers"
 )
 
 const(
@@ -31,18 +31,19 @@ func getPort() string {
 	return ":" + port
 }
 func main() {
-	database.ConnectDB()
+	database.InstallDb()
 	myHandler := chi.NewRouter()
 
 	myHandler.Mount("/", http.FileServer(http.Dir(webDir)))
 
-	myHandler.Get("/api/nextdate", handlers.NextDateGET)
-	myHandler.Post("/api/task", handlers.TaskPost)
-	myHandler.Get("/api/tasks", handlers.TasksRead)
-	myHandler.Get("/api/task", handlers.TaskReadByID)
-	myHandler.Put("/api/task", handlers.TaskUpdate)
-	myHandler.Post("/api/task/done", handlers.TaskDone)
-	myHandler.Delete("/api/task", handlers.TaskDelete)
+	myHandler.Get("/api/nextdate", handlers.NextDateReadGET)
+	myHandler.Post("/api/task", handlers.TaskAddPOST)
+	myHandler.Get("/api/tasks", handlers.TasksReadGET)
+	myHandler.Get("/api/task", handlers.TaskReadGET)
+	myHandler.Put("/api/task", handlers.TaskUpdatePUT)
+	myHandler.Post("/api/task/done", handlers.TaskDonePOST)
+	myHandler.Delete("/api/task", handlers.TaskDELETE)
+	myHandler.Post("/api/signin", handlers.SignInPOST)
 
 	s:=&http.Server{
 		Addr:	getPort(),

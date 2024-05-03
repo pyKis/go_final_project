@@ -1,31 +1,31 @@
 package models
 
+const DatePattern string = "20060102"
+
 type Task struct {
-	//gorm.Model
-	ID      uint   `json:"id,string" gorm:"unique;primaryKey;autoIncrement"` //	 автоинкрементный идентификатор
-	Date    string `json:"date" gorm:"index"`                                // дата задачи, которая будет хранится в формате YYYYMMDD или в Go-представлении 20060102;
-	Title   string `json:"title"`                                            // заголовок задачи;
-	Comment string `json:"comment"`                                          // комментарий к задаче;
-	Repeat  string `json:"repeat" gorm:"size:128"`                           // строковое поле не более 128 символов
+	Id      string `json:"id"`
+	Date    string `json:"date"`
+	Title   string `json:"title"`
+	Comment string `json:"comment"`
+	Repeat  string `json:"repeat"`
 }
 
-type Tabler interface {
-	TableName() string
-}
-
-// переопределяет имя таблицы, используемое задачей в "планировщике"
-func (Task) TableName() string {
-	return "scheduler"
-}
-
-type ResponseError struct {
+type ErrorResponse struct {
 	Error string `json:"error"`
 }
 
-type ResponseTaskId struct {
+type TaskIdResponse struct {
 	Id uint `json:"id"`
 }
 
 type Tasks struct {
 	Tasks []Task `json:"tasks"`
+}
+
+type Sign struct {
+	Password string `json:"password"`
+}
+
+type AuthToken struct {
+	Token string `json:"token"`
 }
