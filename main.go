@@ -2,7 +2,6 @@ package main
 
 import (
 	"errors"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -11,6 +10,7 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/joho/godotenv"
 	"github.com/pyKis/go_final_project/database"
+	"github.com/pyKis/go_final_project/hendlers"
 )
 
 const(
@@ -31,11 +31,18 @@ func getPort() string {
 	return ":" + port
 }
 func main() {
-	fmt.Println("DB connect")
 	database.ConnectDB()
-	fmt.Println("DB connected")
 	myHandler := chi.NewRouter()
+
 	myHandler.Mount("/", http.FileServer(http.Dir(webDir)))
+
+	myHandler.Get("/api/nextdate", handlers.NextDateGET)
+	myHandler.Post("/api/task", handlers.TaskPost)
+	myHandler.Get("/api/tasks", handlers.TasksRead)
+	myHandler.Get("/api/task", handlers.TaskReadByID)
+	myHandler.Put("/api/task", handlers.TaskUpdate)
+	myHandler.Post("/api/task/done", handlers.TaskDone)
+	myHandler.Delete("/api/task", handlers.TaskDelete)
 
 	s:=&http.Server{
 		Addr:	getPort(),
