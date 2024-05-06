@@ -6,7 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
-	`github.com/pyKis/go_final_project/internal/storage`
+	"github.com/pyKis/go_final_project/internal/storage"
 	"github.com/pyKis/go_final_project/configs/models"
 	"net/http"
 	"strconv"
@@ -65,7 +65,7 @@ func TaskAddPOST(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	taskId, err := database.InsertTask(taskData)
+	taskId, err := storage.InsertTask(taskData)
 	if err != nil {
 		responseWithError(w, "failed to create task", err)
 		return
@@ -90,13 +90,13 @@ func TasksReadGET(w http.ResponseWriter, r *http.Request) {
 	if len(search) > 0 {
 		date, err := time.Parse("02.01.2006", search)
 		if err != nil {
-			tasks, err = database.SearchTasks(search)
+			tasks, err = storage.SearchTasks(search)
 		} else {
-			tasks, err = database.SearchTasksByDate(date.Format(models.DatePattern))
+			tasks, err = storage.SearchTasksByDate(date.Format(models.DatePattern))
 		}
 	} else {
 		err := errors.New("")
-		tasks, err = database.ReadTasks()
+		tasks, err = storage.ReadTasks()
 		if err != nil {
 			responseWithError(w, "failed to get tasks", err)
 			return
@@ -117,7 +117,7 @@ func TasksReadGET(w http.ResponseWriter, r *http.Request) {
 func TaskReadGET(w http.ResponseWriter, r *http.Request) {
 	id := r.URL.Query().Get("id")
 
-	task, err := database.ReadTask(id)
+	task, err := storage.ReadTask(id)
 	if err != nil {
 		responseWithError(w, "failed to get task", err)
 		return
@@ -175,7 +175,7 @@ func TaskUpdatePUT(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	_, err := database.UpdateTask(task)
+	_, err := storage.UpdateTask(task)
 	if err != nil {
 		responseWithError(w, "invalid title", errors.New("failed to update task"))
 		return
@@ -194,14 +194,14 @@ func TaskUpdatePUT(w http.ResponseWriter, r *http.Request) {
 }
 
 func TaskDonePOST(w http.ResponseWriter, r *http.Request) {
-	task, err := database.ReadTask(r.URL.Query().Get("id"))
+	task, err := storage.ReadTask(r.URL.Query().Get("id"))
 	if err != nil {
 		responseWithError(w, "failed to get task", err)
 		return
 	}
 
 	if len(task.Repeat) == 0 {
-		err = database.DeleteTaskDb(task.Id)
+		err = storage.DeleteTaskDb(task.Id)
 		if err != nil {
 			responseWithError(w, "failed to delete task", err)
 			return
@@ -213,7 +213,7 @@ func TaskDonePOST(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		_, err = database.UpdateTask(task)
+		_, err = storage.UpdateTask(task)
 		if err != nil {
 			responseWithError(w, "failed to update task", err)
 			return
@@ -234,7 +234,7 @@ func TaskDonePOST(w http.ResponseWriter, r *http.Request) {
 func TaskDELETE(w http.ResponseWriter, r *http.Request) {
 	id := r.URL.Query().Get("id")
 
-	err := database.DeleteTaskDb(id)
+	err := storage.DeleteTaskDb(id)
 	if err != nil {
 		responseWithError(w, "failed to delete task", err)
 		return

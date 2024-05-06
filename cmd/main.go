@@ -33,7 +33,7 @@ func getPort() string {
 }
 func main() {
 	fmt.Println("Connect DB")
-	database.InstallDb()
+	storage.InstallDb()
 	fmt.Println("DB connected")
 	myHandler := chi.NewRouter()
 	fmt.Println("Register handlers")
