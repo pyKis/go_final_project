@@ -4,9 +4,11 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/pyKis/go_final_project/configs/models"
+	"log"
 	"net/http"
 	"os"
+
+	"github.com/pyKis/go_final_project/configs/models"
 
 	"github.com/golang-jwt/jwt"
 )
@@ -30,7 +32,7 @@ func SignInPOST(w http.ResponseWriter, r *http.Request) {
 	if signData.Password == envPassword {
 		jwtInstance := jwt.New(jwt.SigningMethodHS256)
 		token, err := jwtInstance.SignedString([]byte(envPassword))
-
+log.Println(token)
 		taskIdData, err := json.Marshal(models.AuthToken{Token: token})
 		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 		w.WriteHeader(http.StatusOK)
