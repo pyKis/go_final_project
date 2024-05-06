@@ -1,19 +1,21 @@
-FROM golang:latest
+FROM golang:1.22.0
 
-ENV TODO_PORT 7540
-ENV TODO_PASSWORD 12345
-ENV TODO_DBFILE ./scheduler.db
 
-WORKDIR /app_go
+
+WORKDIR /app
 
 COPY go.mod go.sum ./
 RUN go mod download
 
-COPY *.go ./
-COPY app ./app
+COPY cmd ./cmd
+COPY configs ./configs
+COPY internal ./internal
 COPY web ./web
+COPY *.go *.db  ./
+COPY .env ./ 
+
 
 EXPOSE 7540
-RUN CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -o /my_app
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /final_project ./cmd/main.go
 
-CMD ["/my_app"]
+CMD ["/final_project"]

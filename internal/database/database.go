@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
-	"github.com/pyKis/go_final_project/models"
+	"github.com/pyKis/go_final_project/configs/models"
 	"os"
 	_"modernc.org/sqlite"
 )

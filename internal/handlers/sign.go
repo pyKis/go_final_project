@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/pyKis/go_final_project/models"
+	"github.com/pyKis/go_final_project/configs/models"
 	"net/http"
 	"os"
 

@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/pyKis/go_final_project/models"
+	"github.com/pyKis/go_final_project/configs/models"
 )
 
 const DateFormat string = "20060102"
