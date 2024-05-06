@@ -15,7 +15,6 @@ COPY *.go *.db  ./
 COPY .env ./ 
 
 
-EXPOSE 7540
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /final_project ./cmd/main.go
 
 CMD ["/final_project"]
