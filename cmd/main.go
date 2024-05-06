@@ -10,7 +10,7 @@ import (
 
 	"github.com/go-chi/chi"
 	"github.com/joho/godotenv"
-	"github.com/pyKis/go_final_project/internal/database"
+	"github.com/pyKis/go_final_project/internal/storage"
 	"github.com/pyKis/go_final_project/internal/handlers"
 )
 

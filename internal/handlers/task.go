@@ -6,7 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
-	"github.com/pyKis/go_final_project/internal/database"
+	`github.com/pyKis/go_final_project/internal/storage`
 	"github.com/pyKis/go_final_project/configs/models"
 	"net/http"
 	"strconv"
