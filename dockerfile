@@ -18,4 +18,5 @@ COPY .env ./
 
 RUN CGO_ENABLED="$(./.env)" GOOS="$(./.env)" GOARCH="$(./.env)" go build -o /final_project ./cmd/main.go
 
+
 CMD ["/final_project"]

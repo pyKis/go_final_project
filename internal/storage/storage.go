@@ -85,8 +85,8 @@ func InsertTask(task models.Task) (int, error) {
 
 func ReadTasks() ([]models.Task, error) {
 	var tasks []models.Task
-
-	rows, err := db.Query("SELECT * FROM scheduler ORDER BY date")
+	
+	rows, err := db.Query("SELECT * FROM scheduler ORDER BY date Limit 10")
 	if err != nil {
 		return []models.Task{}, err
 	}
@@ -115,7 +115,7 @@ func SearchTasks(search string) ([]models.Task, error) {
 	var tasks []models.Task
 
 	search = fmt.Sprintf("%%%s%%", search)
-	rows, err := db.Query("SELECT * FROM scheduler WHERE title LIKE :search OR comment LIKE :search ORDER BY date",
+	rows, err := db.Query("SELECT * FROM scheduler WHERE title LIKE :search OR comment LIKE :search ORDER BY date Limit 10",
 		sql.Named("search", search))
 	if err != nil {
 		return []models.Task{}, err
@@ -144,10 +144,10 @@ func SearchTasks(search string) ([]models.Task, error) {
 func SearchTasksByDate(date string) ([]models.Task, error) {
 	var tasks []models.Task
 
-	rows, err := db.Query("SELECT * FROM scheduler WHERE date = :date",
+	rows, err := db.Query("SELECT * FROM scheduler WHERE date = :date Limit 10",
 		sql.Named("date", date))
 	if err != nil {
-		return []models.Task{}, err
+		return  tasks, err
 	}
 	defer rows.Close()
 
@@ -170,16 +170,16 @@ func SearchTasksByDate(date string) ([]models.Task, error) {
 	return tasks, nil
 }
 
-func ReadTask(id string) (models.Task, error) {
+func ReadTask(id string) (*models.Task, error) {
 	var task models.Task
 
 	row := db.QueryRow("SELECT * FROM scheduler WHERE id = :id",
 		sql.Named("id", id))
 	if err := row.Scan(&task.Id, &task.Date, &task.Title, &task.Comment, &task.Repeat); err != nil {
-		return models.Task{}, err
+		return &models.Task{}, err
 	}
 
-	return task, nil
+	return &task, nil
 }
 
 func UpdateTask(task models.Task) (models.Task, error) {
@@ -205,7 +205,7 @@ func UpdateTask(task models.Task) (models.Task, error) {
 	return task, nil
 }
 
-func DeleteTaskDb(id string) error {
+func DeleteTask(id string) error {
 	result, err := db.Exec("DELETE FROM scheduler WHERE id = :id",
 		sql.Named("id", id))
 	if err != nil {

@@ -87,7 +87,6 @@ func TasksReadGet(w http.ResponseWriter, r *http.Request) {
 	search := r.URL.Query().Get("search")
 
 	var tasks []models.Task
-
 	if len(search) > 0 {
 		date, err := time.Parse("02.01.2006", search)
 		if err != nil {
@@ -204,7 +203,7 @@ func TaskDonePost(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if len(task.Repeat) == 0 {
-		err = storage.DeleteTaskDb(task.Id)
+		err = storage.DeleteTask(task.Id)
 		if err != nil {
 			responseWithError(w, "failed to delete task", err)
 			return
@@ -216,7 +215,7 @@ func TaskDonePost(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		_, err = storage.UpdateTask(task)
+		_, err = storage.UpdateTask(*task)
 		if err != nil {
 			responseWithError(w, "failed to update task", err)
 			return
@@ -237,7 +236,7 @@ func TaskDonePost(w http.ResponseWriter, r *http.Request) {
 func TaskDelete(w http.ResponseWriter, r *http.Request) {
 	id := r.URL.Query().Get("id")
 
-	err := storage.DeleteTaskDb(id)
+	err := storage.DeleteTask(id)
 	if err != nil {
 		responseWithError(w, "failed to delete task", err)
 		return
