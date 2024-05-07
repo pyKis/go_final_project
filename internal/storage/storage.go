@@ -5,9 +5,10 @@ import (
 	"errors"
 	"fmt"
 	"log"
-	"github.com/pyKis/go_final_project/configs/models"
 	"os"
-	_"modernc.org/sqlite"
+
+	"github.com/pyKis/go_final_project/configs/models"
+	_ "modernc.org/sqlite"
 )
 
 var db *sql.DB

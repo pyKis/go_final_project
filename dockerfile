@@ -2,6 +2,7 @@ FROM golang:1.22.0
 
 
 
+
 WORKDIR /app
 
 COPY go.mod go.sum ./
@@ -15,6 +16,6 @@ COPY *.go *.db  ./
 COPY .env ./ 
 
 
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /final_project ./cmd/main.go
+RUN CGO_ENABLED="$(./.env)" GOOS="$(./.env)" GOARCH="$(./.env)" go build -o /final_project ./cmd/main.go
 
 CMD ["/final_project"]

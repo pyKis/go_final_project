@@ -10,8 +10,8 @@ import (
 
 	"github.com/go-chi/chi"
 	"github.com/joho/godotenv"
-	"github.com/pyKis/go_final_project/internal/storage"
 	"github.com/pyKis/go_final_project/internal/handlers"
+	"github.com/pyKis/go_final_project/internal/storage"
 )
 
 const(
@@ -42,12 +42,12 @@ func main() {
 
 
 	myHandler.Get("/api/nextdate", handlers.NextDateReadGET)
-	myHandler.Post("/api/task", handlers.TaskAddPOST)
-	myHandler.Get("/api/tasks", handlers.TasksReadGET)
-	myHandler.Get("/api/task", handlers.TaskReadGET)
-	myHandler.Put("/api/task", handlers.TaskUpdatePUT)
-	myHandler.Post("/api/task/done", handlers.TaskDonePOST)
-	myHandler.Delete("/api/task", handlers.TaskDELETE)
+	myHandler.Post("/api/task", handlers.TaskAddPost)
+	myHandler.Get("/api/tasks", handlers.TasksReadGet)
+	myHandler.Get("/api/task", handlers.TaskReadGet)
+	myHandler.Put("/api/task", handlers.TaskUpdatePut)
+	myHandler.Post("/api/task/done", handlers.TaskDonePost)
+	myHandler.Delete("/api/task", handlers.TaskDelete)
 	myHandler.Post("/api/signin", handlers.SignInPOST)
 
 	fmt.Printf("Starting server on port %s\n", getPort())

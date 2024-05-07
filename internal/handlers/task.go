@@ -6,11 +6,12 @@ import (
 	"errors"
 	"fmt"
 	"log"
-	"github.com/pyKis/go_final_project/internal/storage"
-	"github.com/pyKis/go_final_project/configs/models"
 	"net/http"
 	"strconv"
 	"time"
+
+	"github.com/pyKis/go_final_project/configs/models"
+	"github.com/pyKis/go_final_project/internal/storage"
 )
 
 func responseWithError(w http.ResponseWriter, errorText string, err error) {
@@ -25,7 +26,7 @@ func responseWithError(w http.ResponseWriter, errorText string, err error) {
 	}
 }
 
-func TaskAddPOST(w http.ResponseWriter, r *http.Request) {
+func TaskAddPost(w http.ResponseWriter, r *http.Request) {
 	var taskData models.Task
 	var buffer bytes.Buffer
 
@@ -82,7 +83,7 @@ func TaskAddPOST(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func TasksReadGET(w http.ResponseWriter, r *http.Request) {
+func TasksReadGet(w http.ResponseWriter, r *http.Request) {
 	search := r.URL.Query().Get("search")
 
 	var tasks []models.Task
@@ -114,7 +115,7 @@ func TasksReadGET(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func TaskReadGET(w http.ResponseWriter, r *http.Request) {
+func TaskReadGet(w http.ResponseWriter, r *http.Request) {
 	id := r.URL.Query().Get("id")
 
 	task, err := storage.ReadTask(id)
@@ -124,17 +125,19 @@ func TaskReadGET(w http.ResponseWriter, r *http.Request) {
 	}
 
 	tasksData, err := json.Marshal(task)
+	if err != nil {
+		log.Panicln("JSON encoding error", err)
+	}
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
 	_, err = w.Write(tasksData)
-	log.Println(fmt.Sprintf("Read task with id=%s", id))
 
 	if err != nil {
 		responseWithError(w, "writing task error", err)
 	}
 }
 
-func TaskUpdatePUT(w http.ResponseWriter, r *http.Request) {
+func TaskUpdatePut(w http.ResponseWriter, r *http.Request) {
 	var task models.Task
 	var buffer bytes.Buffer
 
@@ -193,7 +196,7 @@ func TaskUpdatePUT(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func TaskDonePOST(w http.ResponseWriter, r *http.Request) {
+func TaskDonePost(w http.ResponseWriter, r *http.Request) {
 	task, err := storage.ReadTask(r.URL.Query().Get("id"))
 	if err != nil {
 		responseWithError(w, "failed to get task", err)
@@ -231,7 +234,7 @@ func TaskDonePOST(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func TaskDELETE(w http.ResponseWriter, r *http.Request) {
+func TaskDelete(w http.ResponseWriter, r *http.Request) {
 	id := r.URL.Query().Get("id")
 
 	err := storage.DeleteTaskDb(id)
